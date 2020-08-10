@@ -1,66 +1,37 @@
-const body = document.querySelector('body')
+const obstacles = document.querySelectorAll('.obstacle')
 const flappy = document.querySelector('[wm-flappy]')
-const bird = document.querySelector('#bird')
+const obstaclesArray = []
 
-bird.style.marginTop = '0%'
-
-// Timers para setTimeout e setInterval
-var timerInterval
-var timerTimeout
-
-
-// Descer algum elemento em margem percentual
-function downPC(element, pc) {
-    let marginTop = Number(element.style.marginTop.slice(0, -1))   
+function obstacleNode(){
+    const element = obstacles[0].cloneNode(true)
+    flappy.appendChild(element)
     
-    if(marginTop > 35){
-        // gameover()
-        return
-    }
-    bird.style.transform = 'rotate(45deg)'
     
-    element.style.marginTop = `${marginTop + pc}%`
-    console.log(marginTop)
+    this.remove = () => element.remove()
+    this.setX = (percentage) => element.style.left = `${percentage}%`
+    this.getX = () => Number(element.style.left.slice(0, -1))
+
+    
+    element.style.display = 'grid';
+    this.setX(101)
 }
 
-// Subir algum elemento em margem percentual
-function upPC(element, pc) {
-    let marginTop = Number(element.style.marginTop.slice(0, -1))
-    console.log(timerInterval)
-    
-    if(marginTop <= 0){
-        console.log(marginTop)
-        return
-    }
-    
-    bird.style.transform = 'rotate(-45deg)'
-    element.style.marginTop = `${marginTop - pc}%`
+function animation(){
+    obstaclesArray.forEach(element => {
+        element.setX((element.getX() - 0.5))
+
+        if(element.getX() == 20){
+            obstaclesArray.push(new obstacleNode(obstacles, flappy))
+        }
+
+        if(element.getX() == -20){
+            element.remove()
+        }
+    })
 }
 
-// Primeiro loop de downPC
-timerInterval = setInterval(downPC, 70, bird, 0.5);
 
-// Captura seta pra cima e chama upPC
-document.addEventListener('keydown', e => {
-    if(e.keyCode == 38){
-        e.preventDefault()
-        clearTimeout(timerTimeout)
-        clearInterval(timerInterval)
-        timerInterval = setInterval(upPC, 70, bird, 0.5)
-    }
-})
+obstaclesArray.push(new obstacleNode())
+console.log(obstaclesArray[0])
 
-// Captura soltar seta e chama downPC
-document.addEventListener('keyup', e => {
-    if(e.keyCode == 38){
-        e.preventDefault()
-        timerTimeout = setTimeout((timer) =>{
-            clearInterval(timerInterval)
-            timerInterval = setInterval(downPC, 70, bird, 0.6);
-        }, 200, timerInterval)
-    }
-})
-
-
-
-
+setInterval(animation, 70)
