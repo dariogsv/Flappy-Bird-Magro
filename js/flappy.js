@@ -13,7 +13,9 @@ function obstacleNode(){
 
     
     element.style.display = 'grid';
-    this.setX(101)
+    if(obstaclesArray.length > 0)
+        this.setX(obstaclesArray[obstaclesArray.length-1].getX()+50)
+    else this.setX(101)
 }
 
 function animation(){
@@ -21,7 +23,7 @@ function animation(){
         element.setX((element.getX() - 0.5))
 
         if(element.getX() == 20){
-            obstaclesArray.push(new obstacleNode(obstacles, flappy))
+            obstaclesArray.push(new obstacleNode())
         }
 
         if(element.getX() == -20){
@@ -32,6 +34,11 @@ function animation(){
 
 
 obstaclesArray.push(new obstacleNode())
+obstaclesArray.push(new obstacleNode())
+obstaclesArray.push(new obstacleNode())
+obstaclesArray.push(new obstacleNode())
 console.log(obstaclesArray[0])
 
 setInterval(animation, 70)
+// const ola = 'olá'
+// console.log(ola[ola.length-1])
