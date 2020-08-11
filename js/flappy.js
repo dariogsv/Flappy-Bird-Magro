@@ -5,14 +5,19 @@ const obstaclesArray = []
 function obstacleNode(){
     const element = obstacles[0].cloneNode(true)
     flappy.appendChild(element)
+    const children = element.children
     
-    
-    this.remove = () => element.remove()
     this.setX = (percentage) => element.style.left = `${percentage}%`
     this.getX = () => Number(element.style.left.slice(0, -1))
-
+    this.remove = () => element.remove()
     
-    element.style.display = 'grid';
+    //Random height pipes
+    let tube0 = Math.random()*40+10
+
+    element.style.gridTemplateRows = `${tube0}% 10% 20% 11% auto`
+
+    //Setting some style stuffs to be ready
+    element.style.display = 'grid'
     if(obstaclesArray.length > 0)
         this.setX(obstaclesArray[obstaclesArray.length-1].getX()+50)
     else this.setX(101)
@@ -36,9 +41,6 @@ function animation(){
 obstaclesArray.push(new obstacleNode())
 obstaclesArray.push(new obstacleNode())
 obstaclesArray.push(new obstacleNode())
-obstaclesArray.push(new obstacleNode())
 console.log(obstaclesArray[0])
 
-setInterval(animation, 70)
-// const ola = 'olá'
-// console.log(ola[ola.length-1])
+setInterval(animation, 20)
