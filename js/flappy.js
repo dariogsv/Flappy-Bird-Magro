@@ -42,7 +42,7 @@ obstaclesArray.push(new obstacleNode())
 obstaclesArray.push(new obstacleNode())
 obstaclesArray.push(new obstacleNode())
 
-setInterval(pipesAnimation, 20)
+var obstaclesInterval = setInterval(pipesAnimation, 50)
 
 
 // >>>>>>>>>> Bird stuffs
@@ -50,6 +50,7 @@ setInterval(pipesAnimation, 20)
 const bird = document.querySelector('#bird')
 const gridBird = document.querySelector('.grid-bird')
 var rows = gridBird.style.gridTemplateRows = '237,5px 24px auto'
+var birdTop = 0
 gridBird.style.left = '100px'
 
 var interval = 0
@@ -58,13 +59,13 @@ var timeout = 0
 // flappy, obstacles and obstaclesArray are declared at top of this document
 
 function goUp(){
-    let birdTop = parseInt(rows.split('px')[0])
+    birdTop = parseInt(rows.split('px')[0])
     rows = gridBird.style.gridTemplateRows = `${birdTop-5}px 24px auto`
     return birdTop
 }
 
 function goDown(){
-    let birdTop = parseInt(rows.split('px')[0])
+    birdTop = parseInt(rows.split('px')[0])
     rows = gridBird.style.gridTemplateRows = `${birdTop+5}px 24px auto`
     return birdTop
 }
@@ -95,4 +96,61 @@ document.addEventListener('keyup', e => {
     }
 })
 
+// >>>>>>>>>> Colision and pontuation
 
+var nextObstacle = obstaclesArray[0]
+const birdLeft = Number(gridBird.style.left.slice(0, -2))
+
+var obstacleLeft = nextObstacle.getX()*400/100
+var pathTop = nextObstacle.tube0 + 40
+
+const pontuation = document.querySelector('.pontuation')
+
+const isBirdBefore = () => {
+    obstacleLeft = nextObstacle.getX()*400/100
+    
+    return (obstacleLeft > birdLeft+30)
+}
+
+const isBirdIn = () => {
+    obstacleLeft = nextObstacle.getX()*400/100
+    pathTop = nextObstacle.tube0 + 40
+    console.log(obstacleLeft+72 > birdLeft+30)
+
+    return (obstacleLeft+72 > birdLeft+30)
+}
+
+const isBirdFlying = () => {
+    birdTop = parseInt(rows.split('px')[0])
+    return birdTop <= 420
+}
+
+const increasePontuation = () => pontuation.textContent = `${Number(pontuation.textContent)+1}`
+
+function colision(){
+    birdTop = parseInt(rows.split('px')[0])
+    if(!isBirdFlying()){
+        gameover()
+    }
+    else if(isBirdBefore());
+    else if(isBirdIn()){
+        if(pathTop >= birdTop || pathTop + 125 <= birdTop){
+            gameover()
+        }
+    }
+    else{
+        increasePontuation()
+        nextObstacle = obstaclesArray[obstaclesArray.indexOf(nextObstacle)+1]
+    }
+}
+
+function gameover() {
+    clearInterval(obstaclesInterval)
+    clearTimeout(timeout)
+    clearInterval(interval)
+    clearInterval()
+    alert('GAMEOVER!!!')
+}
+
+
+const colisionInterval = setInterval(colision, 10)

@@ -23,6 +23,22 @@
     overflow: hidden;
 }
 
+@font-face{
+    font-family: "pixel";
+    src: url("../fonts/Pixel.ttf");
+}
+.pontuation{
+    position: absolute;
+    display: block;
+    left: calc(100% - 50px);
+    width: 30px;
+    height: 30px;
+    
+    font-family: 'pixel';
+    color: #fff;
+    font-size: 30px;
+}
+
 #bird{  
     height: 30px;
 }
